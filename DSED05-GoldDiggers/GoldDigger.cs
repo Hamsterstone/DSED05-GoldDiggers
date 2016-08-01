@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Windows.UI.Popups;
+using Windows.UI.Xaml.Controls.Primitives;
 
 namespace DSED05_GoldDiggers
 {
@@ -20,18 +22,21 @@ namespace DSED05_GoldDiggers
 
         public void ClearBet()
         {
-
+            MyBet.Amount = 0;
+            MyBet.Digger = 0;
         }
 
         public bool PlaceBet(int amount, int digger)
         {
             if (amount <= Cash)
             {
+                Cash -= amount;
                 MyBet.Amount = amount;
                 MyBet.Digger = digger;
                 return true;
             }
-            //  MessageBox.Show("Bet exceeds available cash!");
+              new MessageDialog("Bet exceeds available cash!");
+            
             return false;
 
 
@@ -39,7 +44,7 @@ namespace DSED05_GoldDiggers
 
         public void Collect(int Winner)
         {
-
+            Cash += MyBet.PayOut(Winner);
         }
     }
 }

@@ -14,14 +14,17 @@ namespace DSED05_GoldDiggers
 
         public string GetDescription()
         {
-            string description = "";
+            string description = "Bet " + Amount + " on " + Digger;
             return description;
         }
 
         public int PayOut(int Winner)
         {
             int winnings = 0;
-
+            if (Digger == Winner)
+            {
+                winnings = Amount;
+            }
             return winnings;
         }
     }

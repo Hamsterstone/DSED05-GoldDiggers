@@ -8,6 +8,7 @@ namespace DSED05_GoldDiggers
 {
     public class GoldMiner
     {
+        public string Name;
         public int StartingPosition;
         public int RacetrackLength;
        // public PictureBox MyPictureBox = null;
