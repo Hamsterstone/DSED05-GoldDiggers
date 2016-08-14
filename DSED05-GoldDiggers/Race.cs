@@ -17,17 +17,17 @@ namespace DSED05_GoldDiggers
 
         public void LoadData()
         {
-            goldDiggers[0] = new GoldDigger() {Name = "Candi"};
-            goldDiggers[1] = new GoldDigger() {Name = "Mandi" };
-            goldDiggers[2] = new GoldDigger() {Name = "Sandi" };
+            goldDiggers[0] = new Candi() {Name = "Candi"};
+            goldDiggers[1] = new Mandi() {Name = "Mandi" };
+            goldDiggers[2] = new Sandi() {Name = "Sandi" };
             foreach (GoldDigger goldDigger in goldDiggers)
             {
                 goldDigger.Cash = 50;
             }
-            goldMiners[0] = new GoldMiner() { Name = "Jim" };
-            goldMiners[1] = new GoldMiner() { Name = "Kelly" };
-            goldMiners[2] = new GoldMiner() { Name = "Lee" };
-            goldMiners[3] = new GoldMiner() { Name = "George" };
+            goldMiners[0] = new Jim() { Name = "Jim" };
+            goldMiners[1] = new Kelly() { Name = "Kelly" };
+            goldMiners[2] = new Lee() { Name = "Lee" };
+            goldMiners[3] = new George() { Name = "George" };
            ResetRacersPosition();
         }
 

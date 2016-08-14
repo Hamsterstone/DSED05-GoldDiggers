@@ -14,7 +14,7 @@ namespace DSED05_GoldDiggers
 
         public string GetDescription()
         {
-            string description = "Bet " + Amount + " on " + Digger;
+            string description = ThisBettor.Name+" bet " + Amount + " on " + Digger;
             return description;
         }
 

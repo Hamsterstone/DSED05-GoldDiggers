@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace DSED05_GoldDiggers
 {
-    public class GoldMiner
+    public abstract class GoldMiner
     {
         public string Name;
         public int StartingPosition;
@@ -30,4 +30,8 @@ namespace DSED05_GoldDiggers
             Location = 0;
         }
     }
+    public class Jim : GoldMiner { }
+    public class Kelly : GoldMiner { }
+    public class Lee : GoldMiner { }
+    public class George : GoldMiner { }
 }

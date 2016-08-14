@@ -8,7 +8,7 @@ using Windows.UI.Xaml.Controls.Primitives;
 
 namespace DSED05_GoldDiggers
 {
-    public class GoldDigger
+    public abstract class GoldDigger
     {
         public string Name;
         public Bet MyBet;
@@ -47,4 +47,10 @@ namespace DSED05_GoldDiggers
             Cash += MyBet.PayOut(Winner);
         }
     }
+
+    public class Mandi : GoldDigger {}
+
+    public class Candi : GoldDigger {}
+
+    public class Sandi : GoldDigger {}
 }

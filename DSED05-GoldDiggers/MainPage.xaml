@@ -7,5 +7,24 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d">
 
-    <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"/>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="187*"/>
+            <RowDefinition Height="53*"/>
+        </Grid.RowDefinitions>
+        <Canvas HorizontalAlignment="Left" Height="75" Margin="10,10,0,0" VerticalAlignment="Top" Width="113" Background="Black"/>
+        <RadioButton x:Name="rbtCandi" Content="Candi" HorizontalAlignment="Left" Margin="56,5,0,0" VerticalAlignment="Top" Grid.Row="1" GroupName="GoldDiggers"/>
+        <RadioButton x:Name="rbtMandi" Content="Mandi" HorizontalAlignment="Left" Margin="56,36,0,0" VerticalAlignment="Top" Grid.Row="1" GroupName="GoldDiggers"/>
+        <RadioButton x:Name="rbtSandi" Content="Sandi" HorizontalAlignment="Left" Margin="56,67,0,0" VerticalAlignment="Top" Grid.Row="1" GroupName="GoldDiggers"/>
+        <Button x:Name="btnRace" Content="Race!" HorizontalAlignment="Left" Margin="1071,11,0,0" VerticalAlignment="Top" Grid.Row="1" Click="btnRace_Click" Height="63" Width="155"/>
+        <Button x:Name="btnReset" Content="Reset" HorizontalAlignment="Left" Margin="1071,99,0,0" VerticalAlignment="Top" Grid.Row="1" Click="btnReset_Click" Height="50" Width="155"/>
+        <Slider x:Name="sldBetAmount" HorizontalAlignment="Left" Margin="181,36,0,0" VerticalAlignment="Top" Width="490" Grid.Row="1"/>
+        <RadioButton x:Name="rbtJim" Content="JIm" HorizontalAlignment="Left" Margin="181,79,0,0" VerticalAlignment="Top" Grid.Row="1" GroupName="GoldMiners"/>
+        <RadioButton x:Name="rbtKelly" Content="Kelly" HorizontalAlignment="Left" Margin="301,79,0,0" VerticalAlignment="Top" Grid.Row="1" GroupName="GoldMiners"/>
+        <RadioButton x:Name="rbtLee" Content="Lee" HorizontalAlignment="Left" Margin="426,79,0,0" VerticalAlignment="Top" Grid.Row="1" GroupName="GoldMiners"/>
+        <RadioButton x:Name="rbtGeorge" Content="George" HorizontalAlignment="Left" Margin="551,79,0,0" VerticalAlignment="Top" Grid.Row="1" GroupName="GoldMiners"/>
+        <TextBlock x:Name="lblBet" HorizontalAlignment="Left" Margin="181,11,0,0" Grid.Row="1" TextWrapping="Wrap" Text="Bet" VerticalAlignment="Top"/>
+        <TextBlock x:Name="textBlock" HorizontalAlignment="Left" Margin="680,11,0,0" Grid.Row="1" TextWrapping="Wrap" Text="TextBlock" VerticalAlignment="Top" Height="26" Width="356"/>
+        <Button x:Name="btnPlaceBet" Content="Place Bet" HorizontalAlignment="Left" Margin="780,111,0,0" Grid.Row="1" VerticalAlignment="Top" Width="181"/>
+    </Grid>
 </Page>
