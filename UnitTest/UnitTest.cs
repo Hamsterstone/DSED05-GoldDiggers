@@ -11,9 +11,13 @@ namespace UnitTest
         [TestMethod]
         public void TestGoldMinerRunMethod()
         {
+            //Instantiate a new Jim : Goldminer for testing
             GoldMiner jimMiner=new Jim();
+            // Check Location starts at 0
             Assert.AreEqual(0,jimMiner.Location);
+            // run the Run method
             jimMiner.Run();
+            //Check it has changed the location
             Assert.AreNotEqual(0,jimMiner.Location);
         }
     }

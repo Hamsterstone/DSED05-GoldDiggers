@@ -33,6 +33,7 @@ namespace DSED05_GoldDiggers
             Race.SetImages();
         }
 
+        // Connects Mainpage XAML components to class components
         public void ConnectMainPageElements()
         {
             Race.goldMiners[0].movePlayer = MoveJim;
@@ -51,16 +52,22 @@ namespace DSED05_GoldDiggers
             Race.goldMiners[3].MyImage = imgGeorge;
         }
 
+
         private async void btnPlaceBet_Click(object sender, RoutedEventArgs e)
         {
+            // Check that the racers are at the starting line
             if (Race.goldMiners[1].Location != 0)
             {
+                //Create a dialog box
                 MessageDialog dialog = new MessageDialog("Reset the racers before betting");
+                //Show the dialog box
                 await dialog.ShowAsync();
             }
             else
             {
+                // Place bet
                 Race.PlaceBets();
+                // Update Bet descriptions on the form
                 switch (Race.CurrentDigger)
                 {
                     case 0:
