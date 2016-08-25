@@ -5,6 +5,7 @@ using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
+using Windows.UI.Popups;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Controls.Primitives;
@@ -22,100 +23,144 @@ namespace DSED05_GoldDiggers
     /// </summary>
     public sealed partial class MainPage : Page
     {
+        
+        
         public MainPage()
         {
             this.InitializeComponent();
+            Race.LoadData();
+            ConnectMainPageElements();
+            Race.SetImages();
+        }
+
+        public void ConnectMainPageElements()
+        {
+            Race.goldMiners[0].movePlayer = MoveJim;
+            Race.goldMiners[1].movePlayer = MoveKelly;
+            Race.goldMiners[2].movePlayer = MoveLee;
+            Race.goldMiners[3].movePlayer = MoveGeorge;
+            Race.goldDiggers[0].MyRadioButton = rbtCandi;
+            Race.goldDiggers[1].MyRadioButton = rbtMandi;
+            Race.goldDiggers[2].MyRadioButton = rbtSandi;
+            Race.goldDiggers[0].MyLabel = txtCandi;
+            Race.goldDiggers[1].MyLabel = txtMandi;
+            Race.goldDiggers[2].MyLabel = txtSandi;
+            Race.goldMiners[0].MyImage = imgJim;
+            Race.goldMiners[1].MyImage = imgKelly;
+            Race.goldMiners[2].MyImage = imgLee;
+            Race.goldMiners[3].MyImage = imgGeorge;
+        }
+
+        private async void btnPlaceBet_Click(object sender, RoutedEventArgs e)
+        {
+            if (Race.goldMiners[1].Location != 0)
+            {
+                MessageDialog dialog = new MessageDialog("Reset the racers before betting");
+                await dialog.ShowAsync();
+            }
+            else
+            {
+                Race.PlaceBets();
+                switch (Race.CurrentDigger)
+                {
+                    case 0:
+                        txtCandi.Text = Race.goldDiggers[Race.CurrentDigger].MyBet.GetDescription();
+                        break;
+                    case 1:
+                        txtMandi.Text = Race.goldDiggers[Race.CurrentDigger].MyBet.GetDescription();
+                        break;
+                    case 2:
+                        txtSandi.Text = Race.goldDiggers[Race.CurrentDigger].MyBet.GetDescription();
+                        break;
+                }
+            }
+
+
         }
 
         private void btnRace_Click(object sender, RoutedEventArgs e)
         {
+            Race.StartTheRace();
+           
 
         }
 
         private void btnReset_Click(object sender, RoutedEventArgs e)
         {
+            Race.ResetRacersPosition();
+            
+            foreach (GoldDigger goldDigger in Race.goldDiggers)
+            {
+                goldDigger.MyBet = null;
+            }
+            foreach (GoldDigger goldDigger in Race.goldDiggers)
+            {
+                if (goldDigger.MyRadioButton.IsEnabled)
+                {
+                    Race.CurrentDigger = Convert.ToInt32(goldDigger.MyRadioButton.Tag);
+                    sldBetAmount.Maximum = Race.goldDiggers[Race.CurrentDigger].Cash;
 
+
+                    //Factory.SetTheGuyNumber(rbfake.Name);
+
+                    //  sldBetAmount.Maximum = myguy[Factory.GuyNumber].Cash;
+                    //make the bet only go to maximum of the money the person has
+                    //lblName.Text = myguy[Factory.GuyNumber].Name + " bets"; // shows on the label
+                    btnPlaceBet.Content = "Place Bet for " + Race.goldDiggers[Race.CurrentDigger].Name;
+                    //shows on the bet button
+                    lblBet.Text = "Max bet is $" + Race.goldDiggers[Race.CurrentDigger].Cash;
+                    //shows the max he can bet
+
+                    //set the initial dog and bet}
+                }
+
+            }
         }
-    }
-}
-/*
- 
-     
-      <Slider
-                x:Name="udDog"
-                Height="40"
-                Margin="9,0,0,0"
-                VerticalAlignment="Bottom"
-                LargeChange="1"
-                Maximum="4"
-                Minimum="1"
-                TickPlacement="Outside"
-                ToolTipService.ToolTip="Choose Monster"
-                ValueChanged="Slider_ValueChanged" />
-            <Slider
-                x:Name="udBet"
-                Height="40"
-                Margin="9,0,0,54"
-                VerticalAlignment="Bottom"
-                Maximum="2"
-                Minimum="1"
-                TickPlacement="Outside"
-                ToolTipService.ToolTip="Choose Bet"
-                ValueChanged="Slider_ValueChanged" />
-            <TextBlock
-                x:Name="txtMonster"
-                Width="34"
-                Height="30"
-                Margin="157,99,0,0"
-                HorizontalAlignment="Left"
-                VerticalAlignment="Top"
-                RenderTransformOrigin="0.511,-0.35"
-                Text="{Binding Value, ElementName=udDog, Mode=OneWay}"
-                TextWrapping="Wrap" />
-            <TextBlock
-                x:Name="txtBet"
-                Width="34"
-                Height="30"
-                Margin="157,43,0,0"
-                HorizontalAlignment="Left"
-                VerticalAlignment="Top"
-                RenderTransformOrigin="0.511,-0.35"
-                Text="{Binding Value, ElementName=udBet, Mode=OneWay}"
-                TextWrapping="Wrap" />
-            <TextBlock
-                x:Name="lblName_Copy"
-                Width="116"
-                Height="32"
-                Margin="41,97,0,0"
-                HorizontalAlignment="Left"
-                VerticalAlignment="Top"
-                Text="Monster Chosen"
-                TextWrapping="Wrap" />
-     
-     
-    
-    
-    
-    
-    
-    
-    private void rb_CheckedChanged(object sender, RoutedEventArgs e)
+
+        private void rb_CheckedChanged(object sender, RoutedEventArgs e)
         {
             //all rb clicks
             RadioButton rbfake = sender as RadioButton;
+            
 
-            if (rbfake.IsChecked.Value == true) {
+            switch (rbfake.GroupName)
+            {
+                case "GoldDiggers":
+                    if (rbfake.IsChecked.Value == true)
+                    {
+                        Race.CurrentDigger = Convert.ToInt32(rbfake.Tag);
+                        sldBetAmount.Maximum = Race.goldDiggers[Race.CurrentDigger].Cash;
+                       
 
-                Factory.SetTheGuyNumber(rbfake.Name);
+                        //Factory.SetTheGuyNumber(rbfake.Name);
 
-                udBet.Maximum = myguy[Factory.GuyNumber].Cash; //make the bet only go to maximum of the money the person has
-                lblName.Text = myguy[Factory.GuyNumber].Name + " bets"; // shows on the label
-                btnBet.Content = "Place Bet for " + myguy[Factory.GuyNumber].Name; //shows on the bet button
-                lblBet.Text = "Max bet is $" + myguy[Factory.GuyNumber].Cash;  //shows the max he can bet
-                 
-                //set the initial dog and bet
-                myguy[Factory.GuyNumber].Amount = Convert.ToInt32(udBet.Value);
-                myguy[Factory.GuyNumber].Monster = Convert.ToInt32(udDog.Value);
+                        //  sldBetAmount.Maximum = myguy[Factory.GuyNumber].Cash;
+                        //make the bet only go to maximum of the money the person has
+                        //lblName.Text = myguy[Factory.GuyNumber].Name + " bets"; // shows on the label
+                        btnPlaceBet.Content = "Place Bet for " + Race.goldDiggers[Race.CurrentDigger].Name;
+                        //shows on the bet button
+                        lblBet.Text = "Max bet is $" + Race.goldDiggers[Race.CurrentDigger].Cash;
+                        //shows the max he can bet
+
+                        //set the initial dog and bet
+                       
+                        
+
+                    }
+                    break;
+                case "GoldMiners":
+
+                   
+                  
+
+                    if (rbfake.IsChecked.Value == true)
+                    {
+                        Race.CurrentMiner = Convert.ToInt32(rbfake.Tag);
+                        
+                    }
+
+                    break;
+
             }
         }
 
@@ -125,26 +170,15 @@ namespace DSED05_GoldDiggers
 
             Slider slider = sender as Slider;
 
-            if (slider.Name == "udBet" && Factory.GuyNumber != 99) //only run if a person is selected 99 is the default of no person
+            if (Race.CurrentDigger!=null)
+                //only run if a person is selected
             {
-                myguy[Factory.GuyNumber].Amount = Convert.ToInt32(slider.Value);
+                Race.currentBet = Convert.ToInt32(slider.Value);
             }
 
-            if (slider.Name == "udDog" && Factory.GuyNumber != 99)  //pass the amount betted to the class
-            {
-                myguy[Factory.GuyNumber].Monster = Convert.ToInt32(slider.Value);
+            
+        }
 
-            }
-
-
-
-
-    TO SET SLIDER MAXIMUM
-
-      udBet.Maximum = myguy[Factory.GuyNumber].Cash; //make the bet only go to maximum of the money the person has
-
-
-
-
-     
-     */
+       
+    }
+}

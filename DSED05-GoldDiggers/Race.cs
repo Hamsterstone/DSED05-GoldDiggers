@@ -3,66 +3,96 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Windows.Media;
+using Windows.UI.Notifications;
 using Windows.UI.Popups;
+using Windows.UI.Xaml;
+using Windows.UI.Xaml.Media.Imaging;
 
 namespace DSED05_GoldDiggers
 {
-    class Race
+    public static class Race
     {
-        private int raceTrackLength = 50;
+        private static int raceTrackLength = 780;
+        public static int CurrentDigger;
+        public static int CurrentMiner;
+        public static int currentBet;
+        public static GoldDigger[] goldDiggers = new GoldDigger[3];
+        public static GoldMiner[] goldMiners = new GoldMiner[4];
+        private static int winner = -1;
+        private static DispatcherTimer dispatcherTimer = new DispatcherTimer();
 
-        GoldDigger[] goldDiggers = new GoldDigger[3];
-        GoldMiner[] goldMiners = new GoldMiner[4];
-        private int winner = -1;
 
-        public void LoadData()
+        public static void LoadData()
         {
-            goldDiggers[0] = new Candi() {Name = "Candi"};
-            goldDiggers[1] = new Mandi() {Name = "Mandi" };
-            goldDiggers[2] = new Sandi() {Name = "Sandi" };
+            goldDiggers[0] = new Candi();
+            goldDiggers[1] = new Mandi();
+            goldDiggers[2] = new Sandi();
             foreach (GoldDigger goldDigger in goldDiggers)
             {
                 goldDigger.Cash = 50;
             }
-            goldMiners[0] = new Jim() { Name = "Jim" };
-            goldMiners[1] = new Kelly() { Name = "Kelly" };
-            goldMiners[2] = new Lee() { Name = "Lee" };
-            goldMiners[3] = new George() { Name = "George" };
-           ResetRacersPosition();
+            goldMiners[0] = new Jim();
+            goldMiners[1] = new Kelly();
+            goldMiners[2] = new Lee();
+            goldMiners[3] = new George();
+            SetRaceLength();
+            SetRacersPosition();
+        }
+        public static void SetImages() { 
+
+    foreach (var goldMiner in goldMiners)
+            {
+                goldMiner.MyImage.Source = new BitmapImage(new Uri(@"ms-appx:///Assets/GoldMinerWaitSmall.jpg", UriKind.Absolute));
+            }
         }
 
-        public void SetRaceLength()
+        public static void SetRaceLength()
         {
             foreach (GoldMiner goldMiner in goldMiners)
             {
                 goldMiner.RacetrackLength = raceTrackLength;
             }
         }
-        public void ResetRacersPosition()
+        public static void SetRacersPosition()
         {
             foreach (GoldMiner goldMiner in goldMiners)
             {
                 goldMiner.TakeStartingPosition();
-
+            }
+        }
+        public static void ResetRacersPosition()
+        {
+            winner = -1;
+            foreach (GoldMiner goldMiner in goldMiners)
+            {
+                goldMiner.TakeStartingPosition();
+                UpdateRacePosition(goldMiner.Number);
+                goldMiner.MyImage.Source = new BitmapImage(new Uri(@"ms-appx:///Assets/GoldMinerWaitSmall.jpg", UriKind.Absolute));
             }
         }
 
-        public void PlaceBets()
+        public static void PlaceBets()
         {
-            //todo take bet info from uwp and pass to GoldDigger.placebet
+            goldDiggers[CurrentDigger].PlaceBet(currentBet, goldMiners[CurrentMiner].Number);
         }
 
-        public void StartTheRace()
+        public static async void StartTheRace()
         {
-            if (CheckAllBetsIn())
+            if (CheckAllBetsIn()) 
             {
                 RunTheRace();
             }
-            else new MessageDialog("All bets not placed");
+            else
+            {
+                MessageDialog dialog = new MessageDialog("All bets not placed");
+                await dialog.ShowAsync();
+            }
         }
 
-        private void RunTheRace()
+        private static async void RunTheRace()
         {
+           
             int currentRacer = -1;
             bool winStatus = false;
             do
@@ -71,34 +101,118 @@ namespace DSED05_GoldDiggers
                 foreach (int racer in racerOrder)
                 {
                     currentRacer = racer;
-                    winStatus = goldMiners[racer].Run();
-                }
-            } while (!winStatus);
-            winner = currentRacer;
+                    if(!winStatus){ winStatus = goldMiners[racer].Run();}
+                    if (winStatus && winner == -1)
+                    {
+                        winner = currentRacer;}
+                    UpdateRacePosition(racer);
 
+                }
+                await Task.Delay(200);
+              
+            } while (!winStatus);
+            
+            EndTheRace();
         }
 
-        private void EndTheRace()
+        public static void UpdateRacePosition(int racer)
+        {
+            switch (racer)
+            {
+                case 0:
+                    goldMiners[0].movePlayer.X = goldMiners[0].Location;
+                    break;
+                case 1:
+                    goldMiners[1].movePlayer.X = goldMiners[1].Location;
+                    break;
+                case 2:
+                    goldMiners[2].movePlayer.X = goldMiners[2].Location;
+                    break;
+                case 3:
+                    goldMiners[3].movePlayer.X = goldMiners[3].Location;
+                    break;
+            }
+        }
+        private static async void EndTheRace()
         {
             string raceWinnerName = goldMiners[winner].Name;
+            string img = "img" + goldMiners[winner].Name;
+            goldMiners[winner].MyImage.Source= new BitmapImage(new Uri(@"ms-appx:///Assets/GoldMinerWonSmall.jpg", UriKind.Absolute));
             string betWinnerNames = BetWinners();
-            new MessageDialog(raceWinnerName+" won the race, "+betWinnerNames+" won their bet.");
+            
+            MessageDialog dialog = new MessageDialog(raceWinnerName+" won the race, "+betWinnerNames+" won their bet.");
+            await dialog.ShowAsync();
             foreach (GoldDigger goldDigger in goldDiggers)
             {
-                goldDigger.Collect(winner);
+                if (!goldDigger.Busted)
+                {
+                    goldDigger.Collect(winner);
+                    if (goldDigger.Cash == 0)
+                    {
+                        goldDigger.Busted = true;
+                        goldDigger.UpdateLabels("Busted!");
+                        CheckForAllBust();
+                        goldDigger.MyRadioButton.IsEnabled = false;
+                    }
+                }
             }
 
         }
 
-        private string BetWinners()
+        private async static void CheckForAllBust()
+        {
+            if (goldDiggers[0].Busted && goldDiggers[1].Busted && goldDiggers[2].Busted)
+            {
+                MessageDialog dialog = new MessageDialog("All golddiggers are bust. Play again?");
+                
+                dialog.Commands.Clear();
+                dialog.Commands.Add(new UICommand { Label = "Yes", Id = 0 });
+                dialog.Commands.Add(new UICommand { Label = "No", Id = 1 });
+               
+
+                var res = await dialog.ShowAsync();
+                if ((int)res.Id == 0)
+                {
+                    RestartGame();
+                }
+
+                if ((int)res.Id == 1)
+                {
+                    //Do nothing because programatically closing a windows app is bad
+                    //https://msdn.microsoft.com/en-us/library/windows/apps/jj569366.aspx
+                    //  Application.Current.Exit();
+                }
+
+
+            }
+        }
+
+        private static void RestartGame()
+        {
+            ResetRacersPosition();
+            foreach (var goldDigger in goldDiggers)
+            {
+                goldDigger.Busted = false;
+                goldDigger.MyRadioButton.IsEnabled=true;
+                goldDigger.Cash = 50;
+                goldDigger.MyLabel.Text = "";
+                goldDigger.UpdateLabels("");
+
+            }
+        }
+
+        private static string BetWinners()
         {
             string betWinners = "";
             List<string> betWinnerNames = new List<string>();
             foreach (var goldDigger in goldDiggers)
             {
-                if (goldDigger.MyBet.Digger == winner)
+                if (!goldDigger.Busted)
                 {
-                    betWinnerNames.Add(goldDigger.Name);
+                    if (goldDigger.MyBet.Digger == winner)
+                    {
+                        betWinnerNames.Add(goldDigger.Name);
+                    }
                 }
             }
             switch (betWinnerNames.Count)
@@ -119,7 +233,7 @@ namespace DSED05_GoldDiggers
             }
             return "Impossible to get here, something is wrong";
         }
-        private List<int> RandomiseRaceOrder()
+        private static List<int> RandomiseRaceOrder()
         {
          
             List<int> racerNumbers = new List<int>() {0,1,2,3};
@@ -139,9 +253,50 @@ namespace DSED05_GoldDiggers
         
        
         }
-        private bool CheckAllBetsIn()
+        private static bool CheckAllBetsIn()
         {
-            throw new NotImplementedException();
+            foreach (GoldDigger goldDigger in goldDiggers)
+            {
+                if (goldDigger.MyBet == null &&!goldDigger.Busted)
+                {
+                    return false;
+                }
+            }
+            return true;
+        }
+        public static void DispatcherTimerSetup()
+
+        {
+            dispatcherTimer = new DispatcherTimer();
+            dispatcherTimer.Tick += dispatcherTimer_Tick; //methods that runs
+            dispatcherTimer.Interval = TimeSpan.FromMilliseconds(10);
+            dispatcherTimer.Start();
+
+        }
+
+
+
+        static void dispatcherTimer_Tick(object sender, object e)
+
+        {
+            var myrandom = new Random();
+            for (int j = 0; j < 4; j++)
+            {
+                goldMiners[j].movePlayer.X += myrandom.Next(0, 4);
+                //if the dog has reached the end of the track
+                if (goldMiners[j].movePlayer.X > 700)
+                {
+                    //stop timer
+                    dispatcherTimer.Stop();
+                    //winningdog holds the winning dog number j
+                    //WinnerDetails(j);
+
+
+
+                }
+
+            }
+
         }
     }
 }

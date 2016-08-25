@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Windows.UI.Popups;
+using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Controls.Primitives;
 
 namespace DSED05_GoldDiggers
@@ -13,11 +14,16 @@ namespace DSED05_GoldDiggers
         public string Name;
         public Bet MyBet;
         public int Cash;
-        // public RadioButton MyRadioButton;
-        //public Label MyLabel;
-        public void UpdateLabels()
-        {
+        public bool Busted=false;
 
+        public int Amount { get;  set; }
+        public int Miner { get;  set; }
+
+        public RadioButton MyRadioButton;
+        public TextBlock MyLabel;
+        public void UpdateLabels(string text)
+        {
+            MyLabel.Text = text;
         }
 
         public void ClearBet()
@@ -30,6 +36,7 @@ namespace DSED05_GoldDiggers
         {
             if (amount <= Cash)
             {
+                MyBet = new Bet() {ThisBettor = this};
                 Cash -= amount;
                 MyBet.Amount = amount;
                 MyBet.Digger = digger;
@@ -45,12 +52,30 @@ namespace DSED05_GoldDiggers
         public void Collect(int Winner)
         {
             Cash += MyBet.PayOut(Winner);
+            MyBet = null;
         }
     }
 
-    public class Mandi : GoldDigger {}
+    public class Mandi : GoldDigger
+    {
+        public Mandi() 
+        {
+            Name = "Mandi";
+        }
+    }
 
-    public class Candi : GoldDigger {}
+    public class Candi : GoldDigger
+    {
+        public Candi()
+        {
+            Name = "Candi";
+        }
+    }
 
-    public class Sandi : GoldDigger {}
+    public class Sandi : GoldDigger {
+        public Sandi()
+        {
+            Name = "Sandi";
+        }
+    }
 }

@@ -12,19 +12,46 @@
             <RowDefinition Height="187*"/>
             <RowDefinition Height="53*"/>
         </Grid.RowDefinitions>
-        <Canvas HorizontalAlignment="Left" Height="75" Margin="10,10,0,0" VerticalAlignment="Top" Width="113" Background="Black"/>
-        <RadioButton x:Name="rbtCandi" Content="Candi" HorizontalAlignment="Left" Margin="56,5,0,0" VerticalAlignment="Top" Grid.Row="1" GroupName="GoldDiggers"/>
-        <RadioButton x:Name="rbtMandi" Content="Mandi" HorizontalAlignment="Left" Margin="56,36,0,0" VerticalAlignment="Top" Grid.Row="1" GroupName="GoldDiggers"/>
-        <RadioButton x:Name="rbtSandi" Content="Sandi" HorizontalAlignment="Left" Margin="56,67,0,0" VerticalAlignment="Top" Grid.Row="1" GroupName="GoldDiggers"/>
+        <Canvas HorizontalAlignment="Left" Height="541" Margin="10,10,0,0" VerticalAlignment="Top" Width="1260" Background="#FFAEAEAE">
+            <Image x:Name="imgMandi" Height="130" Canvas.Left="10" Canvas.Top="175" Width="100" Source="Assets/MandiSmall.jpg"/>
+            <Image x:Name="imgCandi" Height="130" Canvas.Left="10" Canvas.Top="10" Width="100" Source="Assets/CandiSmall.jpg"/>
+            <Image x:Name="imgSandi" Height="130" Canvas.Left="10" Canvas.Top="340" Width="100" Source="Assets/SandiSmall.jpg"/>
+            <Image x:Name="imgJim" Height="100" Canvas.Left="189" Canvas.Top="10" Width="100" Source="Assets/GoldDiggerWaitSmall.jpg">
+                <Image.RenderTransform>
+                    <TranslateTransform x:Name="MoveJim" X="0" Y="0" />
+                </Image.RenderTransform>
+            </Image>
+            <Image x:Name="imgKelly" Height="100" Canvas.Left="189" Canvas.Top="144" Width="100" Source="Assets/GoldDiggerWaitSmall.jpg">
+                <Image.RenderTransform>
+                    <TranslateTransform x:Name="MoveKelly" X="0" Y="0" />
+                </Image.RenderTransform>
+            </Image>
+            <Image x:Name="imgLee" Height="100" Canvas.Left="189" Canvas.Top="288" Width="100" Source="Assets/GoldDiggerWaitSmall.jpg">
+                <Image.RenderTransform>
+                    <TranslateTransform x:Name="MoveLee" X="0" Y="0" />
+                </Image.RenderTransform>
+            </Image>
+            <Image x:Name="imgGeorge" Height="100" Canvas.Left="189" Canvas.Top="417" Width="100" Source="Assets/GoldDiggerWaitSmall.jpg">
+                <Image.RenderTransform>
+                    <TranslateTransform x:Name="MoveGeorge" X="0" Y="0" />
+                </Image.RenderTransform>
+            </Image>
+            <Image x:Name="image" Height="521" Canvas.Left="1074" Canvas.Top="10" Width="176" Source="Assets/GoldVein.jpg"/>
+        </Canvas>
+        <RadioButton x:Name="rbtCandi" Content="Candi" HorizontalAlignment="Left" Margin="56,5,0,0" VerticalAlignment="Top" Grid.Row="1" GroupName="GoldDiggers" Tag="0" Checked="rb_CheckedChanged"/>
+        <RadioButton x:Name="rbtMandi" Content="Mandi" HorizontalAlignment="Left" Margin="56,36,0,0" VerticalAlignment="Top" Grid.Row="1" GroupName="GoldDiggers" Tag="1" Checked="rb_CheckedChanged"/>
+        <RadioButton x:Name="rbtSandi" Content="Sandi" HorizontalAlignment="Left" Margin="56,67,0,0" VerticalAlignment="Top" Grid.Row="1" GroupName="GoldDiggers" Checked="rb_CheckedChanged" Tag="2"/>
         <Button x:Name="btnRace" Content="Race!" HorizontalAlignment="Left" Margin="1071,11,0,0" VerticalAlignment="Top" Grid.Row="1" Click="btnRace_Click" Height="63" Width="155"/>
         <Button x:Name="btnReset" Content="Reset" HorizontalAlignment="Left" Margin="1071,99,0,0" VerticalAlignment="Top" Grid.Row="1" Click="btnReset_Click" Height="50" Width="155"/>
-        <Slider x:Name="sldBetAmount" HorizontalAlignment="Left" Margin="181,36,0,0" VerticalAlignment="Top" Width="490" Grid.Row="1"/>
-        <RadioButton x:Name="rbtJim" Content="JIm" HorizontalAlignment="Left" Margin="181,79,0,0" VerticalAlignment="Top" Grid.Row="1" GroupName="GoldMiners"/>
-        <RadioButton x:Name="rbtKelly" Content="Kelly" HorizontalAlignment="Left" Margin="301,79,0,0" VerticalAlignment="Top" Grid.Row="1" GroupName="GoldMiners"/>
-        <RadioButton x:Name="rbtLee" Content="Lee" HorizontalAlignment="Left" Margin="426,79,0,0" VerticalAlignment="Top" Grid.Row="1" GroupName="GoldMiners"/>
-        <RadioButton x:Name="rbtGeorge" Content="George" HorizontalAlignment="Left" Margin="551,79,0,0" VerticalAlignment="Top" Grid.Row="1" GroupName="GoldMiners"/>
+        <Slider x:Name="sldBetAmount" HorizontalAlignment="Left" Margin="181,36,0,0" VerticalAlignment="Top" Width="490" Grid.Row="1" Maximum="0" ValueChanged="Slider_ValueChanged" Minimum="5" SmallChange="5" StepFrequency="5"/>
+        <RadioButton x:Name="rbtJim" Content="JIm" HorizontalAlignment="Left" Margin="181,79,0,0" VerticalAlignment="Top" Grid.Row="1" GroupName="GoldMiners" Tag="0" Checked="rb_CheckedChanged"/>
+        <RadioButton x:Name="rbtKelly" Content="Kelly" HorizontalAlignment="Left" Margin="301,79,0,0" VerticalAlignment="Top" Grid.Row="1" GroupName="GoldMiners" Tag="1" Checked="rb_CheckedChanged"/>
+        <RadioButton x:Name="rbtLee" Content="Lee" HorizontalAlignment="Left" Margin="426,79,0,0" VerticalAlignment="Top" Grid.Row="1" GroupName="GoldMiners" Tag="2" Checked="rb_CheckedChanged"/>
+        <RadioButton x:Name="rbtGeorge" Content="George" HorizontalAlignment="Left" Margin="551,79,0,0" VerticalAlignment="Top" Grid.Row="1" GroupName="GoldMiners" Tag="3" Checked="rb_CheckedChanged"/>
         <TextBlock x:Name="lblBet" HorizontalAlignment="Left" Margin="181,11,0,0" Grid.Row="1" TextWrapping="Wrap" Text="Bet" VerticalAlignment="Top"/>
-        <TextBlock x:Name="textBlock" HorizontalAlignment="Left" Margin="680,11,0,0" Grid.Row="1" TextWrapping="Wrap" Text="TextBlock" VerticalAlignment="Top" Height="26" Width="356"/>
-        <Button x:Name="btnPlaceBet" Content="Place Bet" HorizontalAlignment="Left" Margin="780,111,0,0" Grid.Row="1" VerticalAlignment="Top" Width="181"/>
+        <TextBlock x:Name="txtCandi" HorizontalAlignment="Left" Margin="680,11,0,0" Grid.Row="1" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Height="26" Width="356"/>
+        <Button x:Name="btnPlaceBet" Content="Place Bet" HorizontalAlignment="Left" Margin="780,111,0,0" Grid.Row="1" VerticalAlignment="Top" Width="181" Click="btnPlaceBet_Click"/>
+        <TextBlock x:Name="txtMandi" HorizontalAlignment="Left" Margin="680,37,0,0" Grid.Row="1" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Height="26" Width="356"/>
+        <TextBlock x:Name="txtSandi" HorizontalAlignment="Left" Margin="680,64,0,0" Grid.Row="1" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Height="26" Width="356"/>
     </Grid>
 </Page>

@@ -14,7 +14,7 @@ namespace DSED05_GoldDiggers
 
         public string GetDescription()
         {
-            string description = ThisBettor.Name+" bet " + Amount + " on " + Digger;
+            string description = ThisBettor.Name+" bet " + Amount + " on " + Race.goldMiners[Digger].Name;
             return description;
         }
 
@@ -23,7 +23,7 @@ namespace DSED05_GoldDiggers
             int winnings = 0;
             if (Digger == Winner)
             {
-                winnings = Amount;
+                winnings = 2*Amount;
             }
             return winnings;
         }
