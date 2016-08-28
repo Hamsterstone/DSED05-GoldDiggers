@@ -9,6 +9,7 @@ using Windows.UI.Xaml.Controls.Primitives;
 
 namespace DSED05_GoldDiggers
 {
+    //Abstract class "GoldDigger" punters inherit from
     public abstract class GoldDigger
     {
         public string Name;
@@ -21,6 +22,7 @@ namespace DSED05_GoldDiggers
 
         public RadioButton MyRadioButton;
         public TextBlock MyLabel;
+
         public void UpdateLabels(string text)
         {
             MyLabel.Text = text;
@@ -36,6 +38,7 @@ namespace DSED05_GoldDiggers
         {
             if (amount <= Cash)
             {
+                //Create a new Bet
                 MyBet = new Bet() {ThisBettor = this};
                 Cash -= amount;
                 MyBet.Amount = amount;
@@ -55,7 +58,7 @@ namespace DSED05_GoldDiggers
             MyBet = null;
         }
     }
-
+    //Actual punters that will be instantiated
     public class Mandi : GoldDigger
     {
         public Mandi() 

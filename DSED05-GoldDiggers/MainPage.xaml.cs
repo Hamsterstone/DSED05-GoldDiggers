@@ -67,7 +67,7 @@ namespace DSED05_GoldDiggers
             {
                 // Place bet
                 Race.PlaceBets();
-                // Update Bet descriptions on the form
+                // Update Bet description text boxes on the form
                 switch (Race.CurrentDigger)
                 {
                     case 0:
@@ -95,7 +95,7 @@ namespace DSED05_GoldDiggers
         private void btnReset_Click(object sender, RoutedEventArgs e)
         {
             Race.ResetRacersPosition();
-            
+            //reset all bets to null, used by Race.CheckAllBetsIn()
             foreach (GoldDigger goldDigger in Race.goldDiggers)
             {
                 goldDigger.MyBet = null;
@@ -105,28 +105,22 @@ namespace DSED05_GoldDiggers
                 if (goldDigger.MyRadioButton.IsEnabled)
                 {
                     Race.CurrentDigger = Convert.ToInt32(goldDigger.MyRadioButton.Tag);
-                    sldBetAmount.Maximum = Race.goldDiggers[Race.CurrentDigger].Cash;
-
-
-                    //Factory.SetTheGuyNumber(rbfake.Name);
-
-                    //  sldBetAmount.Maximum = myguy[Factory.GuyNumber].Cash;
                     //make the bet only go to maximum of the money the person has
-                    //lblName.Text = myguy[Factory.GuyNumber].Name + " bets"; // shows on the label
+                    sldBetAmount.Maximum = Race.goldDiggers[Race.CurrentDigger].Cash;
+                     //Change text on the bet button
                     btnPlaceBet.Content = "Place Bet for " + Race.goldDiggers[Race.CurrentDigger].Name;
-                    //shows on the bet button
+                   //Show the max bet available
                     lblBet.Text = "Max bet is $" + Race.goldDiggers[Race.CurrentDigger].Cash;
-                    //shows the max he can bet
-
-                    //set the initial dog and bet}
+                    
+                    
                 }
 
             }
         }
-
+        //Checks on all rb clicks 
         private void rb_CheckedChanged(object sender, RoutedEventArgs e)
         {
-            //all rb clicks
+            
             RadioButton rbfake = sender as RadioButton;
             
 
@@ -136,29 +130,20 @@ namespace DSED05_GoldDiggers
                     if (rbfake.IsChecked.Value == true)
                     {
                         Race.CurrentDigger = Convert.ToInt32(rbfake.Tag);
-                        sldBetAmount.Maximum = Race.goldDiggers[Race.CurrentDigger].Cash;
-                       
-
-                        //Factory.SetTheGuyNumber(rbfake.Name);
-
-                        //  sldBetAmount.Maximum = myguy[Factory.GuyNumber].Cash;
                         //make the bet only go to maximum of the money the person has
-                        //lblName.Text = myguy[Factory.GuyNumber].Name + " bets"; // shows on the label
-                        btnPlaceBet.Content = "Place Bet for " + Race.goldDiggers[Race.CurrentDigger].Name;
-                        //shows on the bet button
-                        lblBet.Text = "Max bet is $" + Race.goldDiggers[Race.CurrentDigger].Cash;
-                        //shows the max he can bet
+                        sldBetAmount.Maximum = Race.goldDiggers[Race.CurrentDigger].Cash;
 
-                        //set the initial dog and bet
+                        //Change text on the bet button
+                        btnPlaceBet.Content = "Place Bet for " + Race.goldDiggers[Race.CurrentDigger].Name;
+                        //Show the max bet available
+                        lblBet.Text = "Max bet is $" + Race.goldDiggers[Race.CurrentDigger].Cash;
                        
-                        
 
                     }
                     break;
+
                 case "GoldMiners":
 
-                   
-                  
 
                     if (rbfake.IsChecked.Value == true)
                     {
@@ -176,10 +161,11 @@ namespace DSED05_GoldDiggers
             //https://msdn.microsoft.com/en-us/windows/uwp/controls-and-patterns/slider
 
             Slider slider = sender as Slider;
-
+            //Check a person is selected
             if (Race.CurrentDigger!=null)
-                //only run if a person is selected
+               
             {
+                //Set currentBet value
                 Race.currentBet = Convert.ToInt32(slider.Value);
             }
 
